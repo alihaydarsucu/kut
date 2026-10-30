@@ -3,27 +3,26 @@
 </p>
 
 <p align="center">
-  Türkçe odaklı, gerçek makine bilgilerini önyükleme menüsünde gösteren GRUB teması.
+  A GRUB theme that presents live machine information in the boot menu.
 </p>
 
-Kut; seçili önyükleme hedefini, dağıtım simgelerini ve sistem bilgilerini tek
-bir arayüzde birleştirir. Adı, eski Türkçedeki “kut” kavramından gelir.
+Kut brings the selected boot target, distribution icons, and machine metadata
+into one interface. Its name comes from the Old Turkic concept of “kut”.
 
-## Öne çıkanlar
+## Highlights
 
-- 1080p için tasarlanmış, GRUB'un desteklediği alternatif çözünürlüklere de
-  uyum sağlayan menü yerleşimi
-- Dağıtım, çekirdek, RAM, ürün yazılımı, makine adı ve işlemci bilgisini
-  kurulumda ve her <code>update-grub</code> çalışmasında yenileyen tema şablonu
-- SMBIOS verilerini gösteren isteğe bağlı açılış öncesi telemetri ekranı
-- Linux, Pardus, Windows, macOS ve diğer yaygın önyükleme girdileri için
-  simge eşleştirmeleri
-- Mevcut GRUB yapılandırması ve tema dosyaları için tarih damgalı yedek alan
-  güvenli kurucu ve kaldırıcı
+- A menu layout designed for 1080p and compatible with GRUB-supported fallback
+  resolutions
+- A template that refreshes distribution, kernel, RAM, firmware, host, and CPU
+  information at installation time and on every <code>update-grub</code> run
+- An optional pre-menu telemetry screen using SMBIOS information
+- Icon mappings for Linux, Pardus, Windows, macOS, and other common boot entries
+- A conservative installer and uninstaller with timestamped backups of the
+  existing GRUB configuration and theme files
 
-## Kurulum
+## Install
 
-Önce depoyu klonlayın, ardından kurucuyu yönetici yetkisiyle çalıştırın:
+Clone the repository, then run the installer with administrator privileges:
 
 ~~~bash
 git clone <repository-url> kut
@@ -31,26 +30,29 @@ cd kut
 sudo ./install.sh
 ~~~
 
-Kurucu, mevcut yapılandırmayı
-<code>/var/backups/kut-grub/&lt;tarih-saat&gt;</code> altında yedekler ve ardından GRUB
-yapılandırmasını yeniler. Ayrıntılar için [kurulum rehberine](docs/installation.md)
-bakın.
+The installer backs up the current configuration under
+<code>/var/backups/kut-grub/&lt;timestamp&gt;</code> and then regenerates the GRUB
+configuration. See the [installation guide](docs/installation.md) for details.
 
-## Kaldırma
+## Uninstall
 
 ~~~bash
 sudo ./uninstall.sh
 ~~~
 
-Bu komut yalnızca Kut'a ait tema, kanca ve ayarları kaldırır; kaldırma öncesi
-ayrı bir yedek oluşturur.
+This removes only Kut's theme, hooks, and settings, and creates a separate
+backup before doing so.
 
-## Dokümantasyon
+## Documentation
 
-- [Kurulum ve yapılandırma](docs/installation.md)
-- [Marka varlıkları](docs/brand.md)
-- [Dokümantasyon dizini](docs/README.md)
+- [Installation and configuration](docs/installation.md)
+- [Brand assets](docs/brand.md)
+- [Documentation index](docs/README.md)
 
-## Önizleme
+## Preview
 
-![Kut tema arka planı](kut/background.png)
+![Kut GRUB boot menu running in QEMU](docs/assets/kut-boot-menu.png)
+
+This is a real 1920×1080 GRUB menu capture from a QEMU/OVMF boot, built with
+the committed theme files and representative Linux, Windows, UEFI, and memory
+test menu entries.

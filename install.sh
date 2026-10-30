@@ -20,18 +20,18 @@ GRUB_CFG="${GRUB_CFG:-/boot/grub/grub.cfg}"
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
 info() { printf '\033[1;36m==>\033[0m %s\n' "$*"; }
-warn() { printf '\033[1;33mUYARI:\033[0m %s\n' "$*" >&2; }
+warn() { printf '\033[1;33mWARNING:\033[0m %s\n' "$*" >&2; }
 die() {
-    printf '\033[1;31mHATA:\033[0m %s\n' "$*" >&2
+    printf '\033[1;31mERROR:\033[0m %s\n' "$*" >&2
     exit 1
 }
 
 if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
     if command -v sudo >/dev/null 2>&1; then
-        info "Yönetici yetkisi gerekiyor; sudo ile yeniden çalıştırılıyor..."
+        info "Administrator privileges are required; restarting with sudo..."
         exec sudo -- "$0" "$@"
     fi
-    die "Bu betiği root olarak çalıştırın: sudo $0"
+    die "Run this script as root: sudo $0"
 fi
 
 for required in \
@@ -40,17 +40,17 @@ for required in \
     "$SCRIPT_DIR/tools/render_theme.sh" \
     "$SCRIPT_DIR/tools/grub.d/05_kut_telemetry" \
     "$SCRIPT_DIR/tools/grub.d/06_kut_info"; do
-    [[ -f $required ]] || die "Gerekli dosya bulunamadı: $required"
+    [[ -f $required ]] || die "Required file not found: $required"
 done
 
-[[ -f $DEFAULT_GRUB ]] || die "$DEFAULT_GRUB bulunamadı (GRUB kurulu değil?)"
+[[ -f $DEFAULT_GRUB ]] || die "$DEFAULT_GRUB was not found (is GRUB installed?)"
 
 STAMP=$(date +%Y%m%d-%H%M%S)
 BACKUP_DIR="/var/backups/kut-grub/$STAMP"
 mkdir -p "$BACKUP_DIR"
 chmod 0700 "$BACKUP_DIR"
 
-info "Mevcut yapılandırma yedekleniyor: $BACKUP_DIR"
+info "Backing up the current configuration: $BACKUP_DIR"
 cp -a "$DEFAULT_GRUB" "$BACKUP_DIR/grub.default"
 if [[ -d $THEME_DIR ]]; then
     cp -a "$THEME_DIR" "$BACKUP_DIR/theme"
@@ -64,13 +64,13 @@ done
 # ---------------------------------------------------------------------------
 # Theme files
 # ---------------------------------------------------------------------------
-info "Tema dosyaları kopyalanıyor: $THEME_DIR"
+info "Copying theme files to: $THEME_DIR"
 rm -rf "$THEME_DIR"
 install -d -m 0755 "$THEME_DIR"
 cp -a "$SCRIPT_DIR/kut/." "$THEME_DIR/"
 chmod -R a+rX "$THEME_DIR"
 
-info "Tema bilgi üreticisi ve GRUB kancaları kuruluyor"
+info "Installing the theme renderer and GRUB hooks"
 install -d -m 0755 /usr/local/sbin
 install -m 0755 "$SCRIPT_DIR/tools/render_theme.sh" "$RENDERER"
 install -m 0755 "$SCRIPT_DIR/tools/grub.d/05_kut_telemetry" "$HOOK_TELEMETRY"
@@ -102,7 +102,7 @@ add_grub_var_if_missing() {
     fi
 }
 
-info "GRUB ayarları güncelleniyor"
+info "Updating GRUB settings"
 set_grub_var GRUB_THEME "$THEME_DIR/theme.txt"
 set_grub_var GRUB_GFXMODE "1920x1080,1600x900,1366x768,1280x720,1024x768,auto"
 
@@ -119,41 +119,41 @@ add_grub_var_if_missing KUT_TELEMETRY_DELAY "3"
 # Render the information labels from the installed machine, then regenerate
 # grub.cfg. 06_kut_info repeats the render on every future update-grub.
 # ---------------------------------------------------------------------------
-info "Sistem bilgileri tema etiketlerine yazılıyor"
+info "Rendering system information into the theme labels"
 "$RENDERER" "$THEME_DIR/theme.txt.in" "$THEME_DIR/theme.txt"
 
 if grep -qE 'text[[:space:]]*=.*@KUT_' "$THEME_DIR/theme.txt"; then
-    warn "theme.txt içinde çözümlenmemiş @KUT_*@ değişkenleri var."
+    warn "theme.txt contains unresolved @KUT_*@ variables."
 fi
 
 if [[ ${KUT_SKIP_UPDATE:-0} == 1 ]]; then
-    warn "KUT_SKIP_UPDATE=1: update-grub atlandı."
+    warn "KUT_SKIP_UPDATE=1: skipping update-grub."
 else
-    info "GRUB yapılandırması yenileniyor"
+    info "Regenerating the GRUB configuration"
     if command -v update-grub >/dev/null 2>&1; then
         update-grub
     elif command -v grub-mkconfig >/dev/null 2>&1; then
         grub-mkconfig -o "$GRUB_CFG"
     else
-        die "update-grub veya grub-mkconfig bulunamadı."
+        die "Neither update-grub nor grub-mkconfig was found."
     fi
 
     if [[ -r $GRUB_CFG ]]; then
-        grep -q 'set theme=' "$GRUB_CFG" || warn "grub.cfg içinde tema ayarı görünmüyor."
+        grep -q 'set theme=' "$GRUB_CFG" || warn "The theme setting is not visible in grub.cfg."
         grep -q 'Kut pre-menu telemetry' "$GRUB_CFG" ||
-            warn "grub.cfg içinde açılış öncesi telemetri ekranı görünmüyor."
+            warn "The pre-menu telemetry screen is not visible in grub.cfg."
     fi
 fi
 
 cat <<EOF
 
-  Kut kuruldu.
+  Kut has been installed.
 
-  Tema       : $THEME_DIR/theme.txt
-  Yedek      : $BACKUP_DIR
-  Telemetri  : KUT_TELEMETRY=1, KUT_TELEMETRY_DELAY=3
-  Kaldırma   : sudo $SCRIPT_DIR/uninstall.sh
+  Theme      : $THEME_DIR/theme.txt
+  Backup     : $BACKUP_DIR
+  Telemetry  : KUT_TELEMETRY=1, KUT_TELEMETRY_DELAY=3
+  Uninstall  : sudo $SCRIPT_DIR/uninstall.sh
 
-  Bir sonraki açılışta yeni tema, gerçek sistem bilgileri ve
-  Kut açılış telemetrisi görünecek.
+  The next boot will show the new theme, live system information,
+  and Kut pre-menu telemetry.
 EOF

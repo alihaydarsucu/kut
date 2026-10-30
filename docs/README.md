@@ -1,5 +1,5 @@
-# Kut dokümantasyonu
+# Kut documentation
 
-- [Kurulum ve yapılandırma](installation.md)
-- [Marka varlıkları](brand.md)
-- [Logo tasarım referansı](design/kut-logo-reference/README.md)
+- [Installation and configuration](installation.md)
+- [Brand assets](brand.md)
+- [Logo design reference](design/kut-logo-reference/README.md)

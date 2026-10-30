@@ -73,7 +73,7 @@ terminal-font: "Share Tech Mono Regular 16"
   align = "center"
   font = "Share Tech Mono Regular 15"
   color = "#4ea9cb"
-  text = "SİSTEM BAŞLATMA   //   SELECT BOOT TARGET"
+  text = "SYSTEM STARTUP   //   SELECT BOOT TARGET"
 }
 
 # ---------------------------------------------------------------------------
@@ -112,7 +112,7 @@ terminal-font: "Share Tech Mono Regular 16"
   align = "center"
   font = "Share Tech Mono Regular 16"
   color = "#5bb9d9"
-  text = "OTOMATİK BAŞLATMA  //  %d sn"
+  text = "AUTOMATIC BOOT  //  %d s"
 }
 
 + progress_bar {
@@ -137,5 +137,5 @@ terminal-font: "Share Tech Mono Regular 16"
   align = "center"
   font = "Share Tech Mono Regular 14"
   color = "#2e718b"
-  text = "YÖN TUŞLARI  SEÇ   •   ENTER  BAŞLAT   •   E  DÜZENLE   •   C  KOMUT SATIRI"
+  text = "ARROW KEYS  SELECT   •   ENTER  BOOT   •   E  EDIT   •   C  COMMAND LINE"
 }

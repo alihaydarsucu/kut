@@ -1,63 +1,64 @@
-# Kurulum ve yapılandırma
+# Installation and configuration
 
-## Gereksinimler
+## Requirements
 
-- GRUB 2 ve dağıtımınızın GRUB yapılandırma aracı (<code>update-grub</code> veya
+- GRUB 2 and your distribution's configuration tool (<code>update-grub</code> or
   <code>grub-mkconfig</code>)
-- Kurulum için yönetici yetkisi
-- EFI sistemlerde GRUB'un grafik modunda çalışabilmesi
+- Administrator privileges for installation
+- A graphical GRUB mode on EFI systems
 
-## Kurulum
+## Install
 
 ~~~bash
 sudo ./install.sh
 ~~~
 
-Kurucu aşağıdakileri yapar:
+The installer:
 
-1. <code>/etc/default/grub</code>, mevcut Kut tema dizini ve Kut GRUB kancaları için
-   <code>/var/backups/kut-grub/&lt;tarih-saat&gt;</code> altında yedek oluşturur.
-2. Temayı <code>/boot/grub/themes/kut</code> altına yükler.
-3. Tema etiketlerindeki dağıtım, çekirdek, RAM, ürün yazılımı, makine adı ve
-   işlemci verilerini üretir.
-4. <code>GRUB_THEME</code>, <code>GRUB_GFXMODE</code> ve gerekli Kut ayarlarını günceller.
-5. <code>update-grub</code> ya da uygun olduğunda <code>grub-mkconfig</code> ile
-   <code>grub.cfg</code> dosyasını yeniden oluşturur.
+1. Creates a backup of <code>/etc/default/grub</code>, the existing Kut theme
+   directory, and Kut GRUB hooks under
+   <code>/var/backups/kut-grub/&lt;timestamp&gt;</code>.
+2. Installs the theme in <code>/boot/grub/themes/kut</code>.
+3. Renders distribution, kernel, RAM, firmware, host, and CPU values into the
+   theme labels.
+4. Updates <code>GRUB_THEME</code>, <code>GRUB_GFXMODE</code>, and Kut settings.
+5. Rebuilds <code>grub.cfg</code> with <code>update-grub</code> or, when
+   appropriate, <code>grub-mkconfig</code>.
 
-## Ayarlar
+## Settings
 
-<code>/etc/default/grub</code> içinde aşağıdaki Kut ayarlarını değiştirebilirsiniz:
+You can change these Kut settings in <code>/etc/default/grub</code>:
 
-| Ayar | Varsayılan | Açıklama |
+| Setting | Default | Description |
 | --- | --- | --- |
-| <code>KUT_TELEMETRY</code> | <code>1</code> | Açılış öncesi telemetri ekranını açar veya kapatır. |
-| <code>KUT_TELEMETRY_DELAY</code> | <code>3</code> | Telemetri ekranının saniye cinsinden süresi; <code>1</code>–<code>10</code> aralığındadır. |
+| <code>KUT_TELEMETRY</code> | <code>1</code> | Enables or disables the pre-menu telemetry screen. |
+| <code>KUT_TELEMETRY_DELAY</code> | <code>3</code> | Telemetry duration in seconds; the accepted range is <code>1</code>–<code>10</code>. |
 
-Değişikliklerden sonra yapılandırmayı yenileyin:
+After changing settings, rebuild the configuration:
 
 ~~~bash
 sudo update-grub
 ~~~
 
-## Chroot veya kurulum ortamında test
+## Chroot or installation-environment test
 
-<code>update-grub</code> çağrısını atlamak için:
+To skip the <code>update-grub</code> call:
 
 ~~~bash
 sudo KUT_SKIP_UPDATE=1 ./install.sh
 ~~~
 
-Bu seçenek dosyaları yerleştirir ve etiketleri üretir; GRUB yapılandırmasını
-yenilemez. Hedef sistem açılmadan önce normal ortamda <code>sudo update-grub</code>
-çalıştırılmalıdır.
+This installs the files and renders labels, but does not rebuild the GRUB
+configuration. Run <code>sudo update-grub</code> from the target system before
+booting it.
 
-## Kaldırma
+## Uninstall
 
 ~~~bash
 sudo ./uninstall.sh
 ~~~
 
-Kaldırıcı yalnızca Kut'a ait <code>GRUB_THEME</code>, telemetri ayarları, tema dizini ve
-GRUB kancalarını temizler. Önce <code>/var/backups/kut-grub/&lt;tarih-saat&gt;</code> altında
-bir yedek oluşturur; <code>GRUB_GFXMODE</code> ve <code>GRUB_TIMEOUT_STYLE</code>
-ayarlarını korur.
+The uninstaller removes only Kut's <code>GRUB_THEME</code>, telemetry settings,
+theme directory, and GRUB hooks. It first creates a backup under
+<code>/var/backups/kut-grub/&lt;timestamp&gt;</code> and preserves
+<code>GRUB_GFXMODE</code> and <code>GRUB_TIMEOUT_STYLE</code>.
