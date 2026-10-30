@@ -109,6 +109,7 @@ sed \
     -e "s|@TECHNIGHT_CPU@|$(sed_escape "$cpu")|g" \
     "$template" >"$tmp"
 
+chmod 0644 "$tmp"
 mv -f "$tmp" "$output"
 trap - EXIT
 printf 'render_theme: wrote %s (%s, kernel %s, %s RAM, %s)\n' \
