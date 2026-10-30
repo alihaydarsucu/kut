@@ -25,14 +25,14 @@ into one interface. Its name comes from the Old Turkic concept of “kut”.
 Clone the repository, then run the installer with administrator privileges:
 
 ~~~bash
-git clone <repository-url> kut
+git clone https://github.com/alihaydarsucu/kut.git kut
 cd kut
 sudo ./install.sh
 ~~~
 
 The installer backs up the current configuration under
 <code>/var/backups/kut-grub/&lt;timestamp&gt;</code> and then regenerates the GRUB
-configuration. See the [installation guide](docs/installation.md) for details.
+configuration. See the [installation guide](https://github.com/alihaydarsucu/kut/blob/main/docs/installation.md) for details.
 
 ## Uninstall
 
@@ -45,9 +45,9 @@ backup before doing so.
 
 ## Documentation
 
-- [Installation and configuration](docs/installation.md)
-- [Brand assets](docs/brand.md)
-- [Documentation index](docs/README.md)
+- [Installation and configuration](https://github.com/alihaydarsucu/kut/blob/main/docs/installation.md)
+- [Brand assets](https://github.com/alihaydarsucu/kut/blob/main/docs/brand.md)
+- [Documentation index](https://github.com/alihaydarsucu/kut/tree/main/docs)
 
 ## Preview
 

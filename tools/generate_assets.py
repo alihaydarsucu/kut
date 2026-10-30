@@ -442,7 +442,7 @@ def make_menu_box():
 
 
 def make_select_box():
-    w, h = 900, 56
+    w, h = 900, 44
     img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     radius = 11
@@ -506,6 +506,21 @@ def make_progress_boxes():
     for x in range(4, w - 4, 9):
         hd.line((x, 3, x, h - 4), fill=(220, 252, 255, 55), width=1)
     save_slices("progress_highlight", hl, 7)
+
+
+def make_resource_boxes():
+    for name, fill, border in [
+        ("resource_left", (7, 76, 105, 86), (74, 205, 235, 210)),
+        ("resource_right", (83, 55, 24, 86), (255, 184, 77, 220)),
+    ]:
+        w, h = 300, 145
+        box = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(box)
+        draw.rounded_rectangle((0, 0, w - 1, h - 1), radius=8,
+                               fill=fill, outline=border, width=2)
+        draw.rounded_rectangle((6, 6, w - 7, h - 7), radius=5,
+                               outline=(*border[:3], 70), width=1)
+        box.save(THEME / f"{name}.png", optimize=True)
 
 
 # ---------------------------------------------------------------------------
@@ -709,6 +724,7 @@ def main():
     make_menu_box()
     make_select_box()
     make_progress_boxes()
+    make_resource_boxes()
 
     print("icons ...")
     with tempfile.TemporaryDirectory() as td:

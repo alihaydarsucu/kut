@@ -48,6 +48,7 @@ first_value() {
 distro="GNU/LINUX"
 kernel="LINUX"
 memory="SYSTEM"
+disk="SYSTEM"
 firmware="UEFI"
 hostname_value="KUT"
 cpu="KUT CORE"
@@ -72,6 +73,11 @@ if [[ $generic -eq 0 ]]; then
         fi
     fi
 
+    disk=$(df -hP / 2>/dev/null | awk 'NR == 2 {print $4; exit}')
+    if [[ -z ${disk:-} ]]; then
+        disk="UNKNOWN"
+    fi
+
     if [[ -d /sys/firmware/efi ]]; then
         firmware="UEFI"
     else
@@ -90,12 +96,13 @@ fi
 
 # The information band is deliberately compact; overlong CPU strings would
 # run outside the safe zone at 1024x768 and 800x600.
-distro=$(clean "$distro")
-kernel=$(clean "$kernel")
+distro=$(clean "$distro" | cut -c1-22)
+kernel=$(clean "$kernel" | cut -c1-22)
 memory=$(clean "$memory")
+disk=$(clean "$disk")
 firmware=$(clean "$firmware")
-hostname_value=$(clean "$hostname_value")
-cpu=$(clean "$cpu" | cut -c1-42)
+hostname_value=$(clean "$hostname_value" | cut -c1-16)
+cpu=$(clean "$cpu" | cut -c1-22)
 
 tmp=$(mktemp "${output}.XXXXXX")
 trap 'rm -f "$tmp"' EXIT
@@ -104,6 +111,7 @@ sed \
     -e "s|@KUT_DISTRO@|$(sed_escape "$distro")|g" \
     -e "s|@KUT_KERNEL@|$(sed_escape "$kernel")|g" \
     -e "s|@KUT_MEMORY@|$(sed_escape "$memory")|g" \
+    -e "s|@KUT_DISK@|$(sed_escape "$disk")|g" \
     -e "s|@KUT_FIRMWARE@|$(sed_escape "$firmware")|g" \
     -e "s|@KUT_HOST@|$(sed_escape "$hostname_value")|g" \
     -e "s|@KUT_CPU@|$(sed_escape "$cpu")|g" \
@@ -112,5 +120,5 @@ sed \
 chmod 0644 "$tmp"
 mv -f "$tmp" "$output"
 trap - EXIT
-printf 'render_theme: wrote %s (%s, kernel %s, %s RAM, %s)\n' \
-    "$output" "$distro" "$kernel" "$memory" "$firmware"
+printf 'render_theme: wrote %s (%s, kernel %s, %s RAM, %s free, %s)\n' \
+    "$output" "$distro" "$kernel" "$memory" "$disk" "$firmware"

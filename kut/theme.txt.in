@@ -29,8 +29,8 @@ terminal-font: "Share Tech Mono Regular 16"
   selected_item_color = "#f2fdff"
 
   item_height = 56
-  item_padding = 16
-  item_spacing = 8
+  item_padding = 8
+  item_spacing = 16
   icon_width = 48
   icon_height = 48
   item_icon_space = 14
@@ -44,7 +44,7 @@ terminal-font: "Share Tech Mono Regular 16"
 #  Branding
 # ---------------------------------------------------------------------------
 + image {
-  left = 42%
+  left = 47%
   top = 6%
   file = "kut-logo.png"
 }
@@ -74,26 +74,82 @@ terminal-font: "Share Tech Mono Regular 16"
 # ---------------------------------------------------------------------------
 #  Real machine information (rendered at install / update-grub time)
 # ---------------------------------------------------------------------------
-+ label {
-  left = 18%
-  top = 72%
-  width = 64%
-  height = 3%
-  align = "center"
-  font = "Share Tech Mono Regular 14"
-  color = "#4a9fc0"
-  text = "@KUT_DISTRO@   •   KERNEL @KUT_KERNEL@   •   @KUT_MEMORY@ RAM   •   @KUT_FIRMWARE@"
++ image {
+  left = 5%
+  top = 29%
+  file = "resource_left.png"
+}
+
++ image {
+  left = 78%
+  top = 29%
+  file = "resource_right.png"
 }
 
 + label {
-  left = 18%
-  top = 75%
-  width = 64%
+  left = 5%
+  top = 30%
+  width = 17%
   height = 3%
-  align = "center"
+  align = "left"
   font = "Share Tech Mono Regular 14"
-  color = "#2f7895"
-  text = "@KUT_HOST@   •   @KUT_CPU@"
+  color = "#f3fdff"
+  text = "DISTRO  @KUT_DISTRO@"
+}
+
++ label {
+  left = 5%
+  top = 34%
+  width = 17%
+  height = 3%
+  align = "left"
+  font = "Share Tech Mono Regular 14"
+  color = "#fff0c2"
+  text = "RAM  @KUT_MEMORY@"
+}
+
++ label {
+  left = 5%
+  top = 38%
+  width = 17%
+  height = 3%
+  align = "left"
+  font = "Share Tech Mono Regular 14"
+  color = "#ffe0a0"
+  text = "DISK  @KUT_DISK@ FREE"
+}
+
++ label {
+  left = 78%
+  top = 30%
+  width = 17%
+  height = 3%
+  align = "left"
+  font = "Share Tech Mono Regular 14"
+  color = "#fff8e6"
+  text = "KERNEL  @KUT_KERNEL@"
+}
+
++ label {
+  left = 78%
+  top = 34%
+  width = 17%
+  height = 3%
+  align = "left"
+  font = "Share Tech Mono Regular 14"
+  color = "#ffe0a0"
+  text = "CPU  @KUT_CPU@"
+}
+
++ label {
+  left = 78%
+  top = 38%
+  width = 17%
+  height = 3%
+  align = "left"
+  font = "Share Tech Mono Regular 14"
+  color = "#fff0c2"
+  text = "HOST  @KUT_HOST@"
 }
 
 # ---------------------------------------------------------------------------
