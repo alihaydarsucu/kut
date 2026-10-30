@@ -28,9 +28,9 @@ terminal-font: "Share Tech Mono Regular 16"
   item_color = "#7fb9d6"
   selected_item_color = "#f2fdff"
 
-  item_height = 52
+  item_height = 56
   item_padding = 16
-  item_spacing = 4
+  item_spacing = 8
   icon_width = 48
   icon_height = 48
   item_icon_space = 14
@@ -43,20 +43,15 @@ terminal-font: "Share Tech Mono Regular 16"
 # ---------------------------------------------------------------------------
 #  Branding
 # ---------------------------------------------------------------------------
-+ label {
-  left = 20%
-  top = 7%
-  width = 60%
-  height = 9%
-  align = "center"
-  font = "Rajdhani UI Bold 48"
-  color = "#c9f4ff"
-  text = "KUT"
++ image {
+  left = 42%
+  top = 6%
+  file = "kut-logo.png"
 }
 
 + label {
   left = 20%
-  top = 14%
+  top = 18%
   width = 60%
   height = 4%
   align = "center"
