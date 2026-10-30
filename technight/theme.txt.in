@@ -1,0 +1,141 @@
+# ============================================================================
+#  TechNight  //  J.A.R.V.I.S. boot interface
+#  Template file. install.sh and /etc/grub.d/06_technight_info replace the
+#  @TECHNIGHT_*@ tokens with real values from the machine.
+# ============================================================================
+
+title-text: ""
+
+desktop-image: "background.png"
+desktop-color: "#030711"
+desktop-image-scale-method: "crop"
+desktop-image-h-align: "center"
+desktop-image-v-align: "center"
+
+terminal-font: "Share Tech Mono Regular 16"
+
+# ---------------------------------------------------------------------------
+#  Boot menu
+# ---------------------------------------------------------------------------
++ boot_menu {
+  left = 27%
+  top = 29%
+  width = 46%
+  height = 42%
+
+  item_font = "Rajdhani UI Medium Regular 24"
+  selected_item_font = "Rajdhani UI Bold 24"
+  item_color = "#7fb9d6"
+  selected_item_color = "#f2fdff"
+
+  item_height = 52
+  item_padding = 16
+  item_spacing = 4
+  icon_width = 48
+  icon_height = 48
+  item_icon_space = 14
+
+  selected_item_pixmap_style = "select_*.png"
+  menu_pixmap_style = "menu_*.png"
+  scrollbar = false
+}
+
+# ---------------------------------------------------------------------------
+#  Branding
+# ---------------------------------------------------------------------------
++ label {
+  left = 20%
+  top = 7%
+  width = 60%
+  height = 9%
+  align = "center"
+  font = "Rajdhani UI Bold 48"
+  color = "#c9f4ff"
+  text = "TECHNIGHT"
+}
+
++ label {
+  left = 20%
+  top = 14%
+  width = 60%
+  height = 4%
+  align = "center"
+  font = "Share Tech Mono Regular 15"
+  color = "#3f92b4"
+  text = "J.A.R.V.I.S.  //  BOOT INTERFACE  //  v2.0"
+}
+
++ label {
+  left = 20%
+  top = 25%
+  width = 60%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 15"
+  color = "#4ea9cb"
+  text = "SİSTEM BAŞLATMA   //   SELECT BOOT TARGET"
+}
+
+# ---------------------------------------------------------------------------
+#  Real machine information (rendered at install / update-grub time)
+# ---------------------------------------------------------------------------
++ label {
+  left = 18%
+  top = 72%
+  width = 64%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 14"
+  color = "#4a9fc0"
+  text = "@TECHNIGHT_DISTRO@   •   KERNEL @TECHNIGHT_KERNEL@   •   @TECHNIGHT_MEMORY@ RAM   •   @TECHNIGHT_FIRMWARE@"
+}
+
++ label {
+  left = 18%
+  top = 75%
+  width = 64%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 14"
+  color = "#2f7895"
+  text = "@TECHNIGHT_HOST@   •   @TECHNIGHT_CPU@"
+}
+
+# ---------------------------------------------------------------------------
+#  Live timeout counter and progress bar (updated by GRUB itself)
+# ---------------------------------------------------------------------------
++ label {
+  left = 27%
+  top = 78%
+  width = 46%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 16"
+  color = "#5bb9d9"
+  text = "OTOMATİK BAŞLATMA  //  %d sn"
+}
+
++ progress_bar {
+  id = "__timeout__"
+  left = 36%
+  top = 82%
+  width = 28%
+  height = 16
+  bar_style = "progress_bar_*.png"
+  highlight_style = "progress_highlight_*.png"
+  bg_color = "#041220"
+  fg_color = "#3dc4f6"
+  border_color = "#2b88ac"
+  text = ""
+}
+
++ label {
+  left = 20%
+  top = 91%
+  width = 60%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 14"
+  color = "#2e718b"
+  text = "YÖN TUŞLARI  SEÇ   •   ENTER  BAŞLAT   •   E  DÜZENLE   •   C  KOMUT SATIRI"
+}

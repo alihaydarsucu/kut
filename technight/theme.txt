@@ -1,52 +1,141 @@
-title-text: ""
-desktop-color: "#0a0e1a"
-desktop-image: "background.png"
+# ============================================================================
+#  TechNight  //  J.A.R.V.I.S. boot interface
+#  Template file. install.sh and /etc/grub.d/06_technight_info replace the
+#  @TECHNIGHT_*@ tokens with real values from the machine.
+# ============================================================================
 
+title-text: ""
+
+desktop-image: "background.png"
+desktop-color: "#030711"
+desktop-image-scale-method: "crop"
+desktop-image-h-align: "center"
+desktop-image-v-align: "center"
+
+terminal-font: "Share Tech Mono Regular 16"
+
+# ---------------------------------------------------------------------------
+#  Boot menu
+# ---------------------------------------------------------------------------
 + boot_menu {
-  left = 20%
-  top = 32%
-  width = 60%
-  height = 36%
-  item_font = "DejaVu Sans Regular 14"
-  item_color = "#4a7aaa"
-  selected_item_color = "#e0f0ff"
-  item_height = 36
+  left = 27%
+  top = 29%
+  width = 46%
+  height = 42%
+
+  item_font = "Rajdhani UI Medium Regular 24"
+  selected_item_font = "Rajdhani UI Bold 24"
+  item_color = "#7fb9d6"
+  selected_item_color = "#f2fdff"
+
+  item_height = 52
   item_padding = 16
   item_spacing = 4
+  icon_width = 48
+  icon_height = 48
+  item_icon_space = 14
+
   selected_item_pixmap_style = "select_*.png"
-  scrollbar = false
   menu_pixmap_style = "menu_*.png"
+  scrollbar = false
+}
+
+# ---------------------------------------------------------------------------
+#  Branding
+# ---------------------------------------------------------------------------
++ label {
+  left = 20%
+  top = 7%
+  width = 60%
+  height = 9%
+  align = "center"
+  font = "Rajdhani UI Bold 48"
+  color = "#c9f4ff"
+  text = "TECHNIGHT"
 }
 
 + label {
-  top = 18%
   left = 20%
+  top = 14%
   width = 60%
+  height = 4%
   align = "center"
-  id = "__title__"
-  text = "BOOT MANAGER"
-  color = "#4a9eff"
-  font = "DejaVu Sans Bold 20"
+  font = "Share Tech Mono Regular 15"
+  color = "#3f92b4"
+  text = "J.A.R.V.I.S.  //  BOOT INTERFACE  //  v2.0"
 }
 
 + label {
-  top = 71%
   left = 20%
+  top = 25%
   width = 60%
+  height = 3%
   align = "center"
-  id = "__timeout__"
-  text = "Otomatik başlatılıyor: %d"
-  color = "#2a4a6a"
-  font = "DejaVu Sans Regular 11"
+  font = "Share Tech Mono Regular 15"
+  color = "#4ea9cb"
+  text = "SİSTEM BAŞLATMA   //   SELECT BOOT TARGET"
+}
+
+# ---------------------------------------------------------------------------
+#  Real machine information (rendered at install / update-grub time)
+# ---------------------------------------------------------------------------
++ label {
+  left = 18%
+  top = 72%
+  width = 64%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 14"
+  color = "#4a9fc0"
+  text = "Pardus GNU/Linux 25 (yirmibes)   •   KERNEL 6.12.88+deb13-amd64   •   59 GB RAM   •   UEFI"
+}
+
++ label {
+  left = 18%
+  top = 75%
+  width = 64%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 14"
+  color = "#2f7895"
+  text = "pardustation   •   AMD Ryzen 7 7735HS with Radeon Graphics"
+}
+
+# ---------------------------------------------------------------------------
+#  Live timeout counter and progress bar (updated by GRUB itself)
+# ---------------------------------------------------------------------------
++ label {
+  left = 27%
+  top = 78%
+  width = 46%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 16"
+  color = "#5bb9d9"
+  text = "OTOMATİK BAŞLATMA  //  %d sn"
 }
 
 + progress_bar {
-  id = "__timeout_indicator__"
-  left = 30%
-  top = 75%
-  width = 40%
-  height = 3
-  fg_color = "#4a9eff"
-  bg_color = "#0f1f3a"
-  border_color = "#1a3a5a"
+  id = "__timeout__"
+  left = 36%
+  top = 82%
+  width = 28%
+  height = 16
+  bar_style = "progress_bar_*.png"
+  highlight_style = "progress_highlight_*.png"
+  bg_color = "#041220"
+  fg_color = "#3dc4f6"
+  border_color = "#2b88ac"
+  text = ""
+}
+
++ label {
+  left = 20%
+  top = 91%
+  width = 60%
+  height = 3%
+  align = "center"
+  font = "Share Tech Mono Regular 14"
+  color = "#2e718b"
+  text = "YÖN TUŞLARI  SEÇ   •   ENTER  BAŞLAT   •   E  DÜZENLE   •   C  KOMUT SATIRI"
 }
