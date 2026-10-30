@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 134" role="img" aria-labelledby="title description">
+  <title id="title">Kut GRUB theme logo</title>
+  <desc id="description">Kut wordmark with a four-panel boot telemetry mark.</desc>
+  <rect width="400" height="134" rx="12" fill="#0B0F14"/>
+  <g transform="translate(0,10)">
+    <path d="M5 18V5H18M42 5H55V18M55 42V55H42M18 55H5V42" fill="none" stroke="#FFB454" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="10" y="10" width="40" height="40" rx="8" fill="#2DD4BF"/>
+    <path d="M20 22L30 30L20 38M33 40H42" fill="none" stroke="#0B0F14" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="62" y="10" width="40" height="40" rx="8" fill="none" stroke="#8AA0B4" stroke-width="3"/>
+    <rect x="69" y="32" width="7" height="10" rx="1.5" fill="#8AA0B4"/>
+    <rect x="79" y="26" width="7" height="16" rx="1.5" fill="#8AA0B4"/>
+    <rect x="89" y="20" width="7" height="22" rx="1.5" fill="#8AA0B4"/>
+    <rect x="10" y="62" width="40" height="40" rx="8" fill="none" stroke="#8AA0B4" stroke-width="3"/>
+    <path d="M18 92L27 82L34 87L42 72" fill="none" stroke="#8AA0B4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="42" cy="72" r="3.5" fill="#FFB454"/>
+    <rect x="62" y="62" width="40" height="40" rx="8" fill="none" stroke="#8AA0B4" stroke-width="3"/>
+    <circle cx="82" cy="82" r="11" fill="none" stroke="#8AA0B4" stroke-width="3"/>
+    <circle cx="82" cy="82" r="3.5" fill="#8AA0B4"/>
+  </g>
+  <text x="136" y="96" font-family="JetBrains Mono, ui-monospace, monospace" font-weight="700" font-size="92" fill="#E6EDF3">kut</text>
+  <rect x="320" y="34" width="44" height="62" fill="#2DD4BF"/>
+  <text x="138" y="124" font-family="JetBrains Mono, ui-monospace, monospace" font-weight="500" font-size="13" letter-spacing="4" fill="#8AA0B4">GRUB THEME · INFO + OS</text>
+</svg>
