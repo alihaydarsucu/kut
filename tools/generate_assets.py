@@ -266,8 +266,6 @@ def build_background() -> Image.Image:
     # ------------------------------------------------------------------
     side = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     sd = ImageDraw.Draw(side)
-    f_label = ImageFont.truetype(str(FONT_MONO), 15 * S)
-    f_value = ImageFont.truetype(str(FONT_TITLE), 30 * S)
     f_tiny = ImageFont.truetype(str(FONT_MONO), 12 * S)
 
     def bracket(x, y, w_, h_, flip_x=False, flip_y=False):
@@ -278,28 +276,33 @@ def build_background() -> Image.Image:
         sd.line((x, y, x + 24 * S * sx, y), fill=(78, 201, 235, 150), width=2 * S)
         sd.line((x, y, x, y + 24 * S * sy), fill=(78, 201, 235, 150), width=2 * S)
 
-    def data_block(x, y, label, value, pct, right=False):
-        align = "ra" if right else "la"
-        text(sd, (x, y), label, f_label, (78, 173, 205, 160), anchor=align)
-        text(sd, (x, y + 15 * S), value, f_value, (159, 231, 251, 190), anchor=align)
-        by = y + 52 * S
-        bw = 132 * S
-        bx = x - bw if right else x
-        sd.rectangle((bx, by, bx + bw, by + 3 * S), fill=(20, 68, 94, 110))
-        sd.rectangle((bx, by, bx + bw * pct, by + 3 * S), fill=(62, 189, 230, 190))
-        # tick separators
-        for k in range(1, 8):
-            tx = bx + bw * k / 8
-            sd.line((tx, by - 3 * S, tx, by + 6 * S), fill=(8, 28, 44, 180), width=1 * S)
+    rng = random.Random(2077)
 
-    data_block(126 * S, 352 * S, "SYS.PWR // CORE", "98.4%", 0.984)
-    data_block(126 * S, 452 * S, "NEURAL LINK", "SYNCED", 0.76)
-    data_block(126 * S, 552 * S, "MEM.BANK // ECC", "64.0 TB", 0.64)
-    data_block(1794 * S, 352 * S, "ARC.REACTOR", "STABLE", 0.91, right=True)
-    data_block(1794 * S, 452 * S, "DEF.GRID", "ONLINE", 0.83, right=True)
-    data_block(1794 * S, 552 * S, "UPLINK // AES", "SECURE", 0.97, right=True)
+    def data_stream(x, y, width, rows=16, right=False):
+        """Abstract telemetry traces.
 
-    # Small vertical scales next to the data blocks.
+        No numbers or fabricated status values are baked into the artwork:
+        everything that looks like a reading is rendered live by GRUB or by
+        the install-time information labels.
+        """
+        for i in range(rows):
+            yy = y + i * 20
+            frac = rng.uniform(0.12, 0.98)
+            length = width * frac
+            x0 = x - length if right else x
+            alpha = rng.randint(30, 100) if i % 5 else rng.randint(90, 150)
+            sd.line((x0 * S, yy * S, (x0 + length) * S, yy * S),
+                    fill=(50, 157, 194, alpha), width=1 * S)
+            sd.rectangle(((x - 2) * S, (yy - 2) * S, (x + 3) * S, (yy + 3) * S),
+                         outline=(78, 201, 235, min(210, alpha + 60)), width=1 * S)
+            if i % 4 == 0:
+                diamond(sd, (x0 + length) * S, yy * S, 3 * S,
+                        (104, 221, 250, min(200, alpha + 50)))
+
+    data_stream(126, 340, 170)
+    data_stream(1794, 340, 170, right=True)
+
+    # Small vertical scales next to the telemetry traces.
     for x in (104, 1816):
         for i in range(17):
             yy = 290 + i * 18
@@ -313,11 +316,11 @@ def build_background() -> Image.Image:
     bracket(92 * S, 810 * S, 300 * S, 150 * S, flip_y=True)
     bracket(1828 * S, 810 * S, 300 * S, 150 * S, flip_x=True, flip_y=True)
 
-    # Top status text.
+    # Top branding (no runtime status claims).
     text(sd, (92 * S, 58 * S), "TECHNIGHT // HUD 04.2", f_tiny, (64, 157, 190, 125))
-    text(sd, (1828 * S, 58 * S), "SECURE BOOT // UEFI", f_tiny, (64, 157, 190, 125), anchor="ra")
+    text(sd, (1828 * S, 58 * S), "J.A.R.V.I.S. // UI CORE", f_tiny, (64, 157, 190, 125), anchor="ra")
     text(sd, (92 * S, 74 * S), "STARK-CLASS INTERFACE", f_tiny, (42, 104, 130, 85))
-    text(sd, (1828 * S, 74 * S), "ALL SYSTEMS NOMINAL", f_tiny, (42, 104, 130, 85), anchor="ra")
+    text(sd, (1828 * S, 74 * S), "TECHNIGHT BOOT SYSTEM", f_tiny, (42, 104, 130, 85), anchor="ra")
 
     # Bottom strip.
     sd.line((120 * S, 1005 * S, 1800 * S, 1005 * S), fill=(29, 98, 126, 90), width=1 * S)
@@ -539,29 +542,31 @@ def icon_canvas(im: Image.Image, size=96, pad=7, glow=True) -> Image.Image:
 
 
 def make_logo_icons(tmp: Path):
-    mapping = {
-        "ubuntu.svg": "ubuntu.png",
-        "pardus.svg": "pardus.png",
-        "windows.svg": "windows.png",
-        "debian.svg": "debian.png",
-        "fedora.svg": "fedora.png",
-        "archlinux.svg": "archlinux.png",
-        "linuxmint.svg": "linuxmint.png",
-        "manjaro.svg": "manjaro.png",
-        "opensuse.svg": "opensuse.png",
-        "kalilinux.svg": "kali.png",
-        "popos.svg": "pop.png",
-        "zorin.svg": "zorin.png",
-        "linux.svg": "gnu-linux.png",
-        "linux.svg": "linux.png",
-        "freebsd.svg": "freebsd.png",
-        "android.svg": "android.png",
-        "apple.svg": "apple.png",
-        "apple.svg": "macos.png",
-        "apple.svg": "osx.png",
-        "apple.svg": "darwin.png",
-        "linux.svg": "gnu.png",
-    }
+    # Keep this as a list of pairs: several GRUB icon names intentionally
+    # share one source SVG (linux, apple), which a dict would silently drop.
+    mapping = [
+        ("ubuntu.svg", "ubuntu.png"),
+        ("pardus.svg", "pardus.png"),
+        ("windows.svg", "windows.png"),
+        ("debian.svg", "debian.png"),
+        ("fedora.svg", "fedora.png"),
+        ("archlinux.svg", "archlinux.png"),
+        ("linuxmint.svg", "linuxmint.png"),
+        ("manjaro.svg", "manjaro.png"),
+        ("opensuse.svg", "opensuse.png"),
+        ("kalilinux.svg", "kali.png"),
+        ("popos.svg", "pop.png"),
+        ("zorin.svg", "zorin.png"),
+        ("linux.svg", "gnu-linux.png"),
+        ("linux.svg", "linux.png"),
+        ("freebsd.svg", "freebsd.png"),
+        ("android.svg", "android.png"),
+        ("apple.svg", "apple.png"),
+        ("apple.svg", "macos.png"),
+        ("apple.svg", "osx.png"),
+        ("apple.svg", "darwin.png"),
+        ("linux.svg", "gnu.png"),
+    ]
     # Some Simple Icons marks use near-black brand colours that disappear on
     # the dark HUD background. Recolour those while keeping the exact shape.
     recolor = {
@@ -571,7 +576,7 @@ def make_logo_icons(tmp: Path):
         "darwin.png": (234, 249, 255),
         "kali.png": (143, 203, 232),    # brighter Kali blue-grey
     }
-    for svg_name, png_name in mapping.items():
+    for svg_name, png_name in mapping:
         src = LOGOS / svg_name
         rendered = tmp / (svg_name.replace(".svg", ".png"))
         if not rendered.exists():
@@ -710,11 +715,12 @@ def main():
         make_logo_icons(Path(td))
     make_simple_icons()
 
-    # Remove the legacy hand-drawn logo placeholders.
-    for legacy in ("pardus_logo.png", "ubuntu_logo.png", "menu_c.png"):
+    # Drop the legacy hand-drawn logo placeholders. The real brand marks are
+    # rendered into icons/ from the SVG sources instead.
+    for legacy in ("pardus_logo.png", "ubuntu_logo.png"):
         p = THEME / legacy
-        if p.exists() and legacy == "menu_c.png":
-            pass  # replaced by the full menu_*.png set below
+        if p.exists():
+            p.unlink()
 
     print("done")
 
