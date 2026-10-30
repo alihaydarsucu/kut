@@ -1,7 +1,7 @@
 # ============================================================================
-#  TechNight  //  J.A.R.V.I.S. boot interface
-#  Template file. install.sh and /etc/grub.d/06_technight_info replace the
-#  @TECHNIGHT_*@ tokens with real values from the machine.
+#  Kut  //  boot interface
+#  Template file. install.sh and /etc/grub.d/06_kut_info replace the
+#  @KUT_*@ tokens with real values from the machine.
 # ============================================================================
 
 title-text: ""
@@ -51,7 +51,7 @@ terminal-font: "Share Tech Mono Regular 16"
   align = "center"
   font = "Rajdhani UI Bold 48"
   color = "#c9f4ff"
-  text = "TECHNIGHT"
+  text = "KUT"
 }
 
 + label {
@@ -62,7 +62,7 @@ terminal-font: "Share Tech Mono Regular 16"
   align = "center"
   font = "Share Tech Mono Regular 15"
   color = "#3f92b4"
-  text = "J.A.R.V.I.S.  //  BOOT INTERFACE  //  v2.0"
+  text = "KUT  //  BOOT INTERFACE  //  v2.0"
 }
 
 + label {

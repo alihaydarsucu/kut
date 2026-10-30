@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# TechNight GRUB theme installer.
+# Kut GRUB theme installer.
 #
 #   sudo ./install.sh
 #
 # The script is intentionally conservative: it backs up the existing theme,
-# /etc/default/grub and the two TechNight hooks, then changes only the settings
-# this theme needs.  Set TECHNIGHT_SKIP_UPDATE=1 to install files without
+# /etc/default/grub and the two Kut hooks, then changes only the settings
+# this theme needs.  Set KUT_SKIP_UPDATE=1 to install files without
 # running update-grub (useful in a chroot or for testing).
 set -euo pipefail
 
-THEME_NAME="technight"
+THEME_NAME="kut"
 THEME_DIR="/boot/grub/themes/${THEME_NAME}"
-RENDERER="/usr/local/sbin/technight-render-theme"
-HOOK_TELEMETRY="/etc/grub.d/05_technight_telemetry"
-HOOK_INFO="/etc/grub.d/06_technight_info"
+RENDERER="/usr/local/sbin/kut-render-theme"
+HOOK_TELEMETRY="/etc/grub.d/05_kut_telemetry"
+HOOK_INFO="/etc/grub.d/06_kut_info"
 DEFAULT_GRUB="/etc/default/grub"
 GRUB_CFG="${GRUB_CFG:-/boot/grub/grub.cfg}"
 
@@ -35,18 +35,18 @@ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
 fi
 
 for required in \
-    "$SCRIPT_DIR/technight/theme.txt.in" \
-    "$SCRIPT_DIR/technight/background.png" \
+    "$SCRIPT_DIR/kut/theme.txt.in" \
+    "$SCRIPT_DIR/kut/background.png" \
     "$SCRIPT_DIR/tools/render_theme.sh" \
-    "$SCRIPT_DIR/tools/grub.d/05_technight_telemetry" \
-    "$SCRIPT_DIR/tools/grub.d/06_technight_info"; do
+    "$SCRIPT_DIR/tools/grub.d/05_kut_telemetry" \
+    "$SCRIPT_DIR/tools/grub.d/06_kut_info"; do
     [[ -f $required ]] || die "Gerekli dosya bulunamadı: $required"
 done
 
 [[ -f $DEFAULT_GRUB ]] || die "$DEFAULT_GRUB bulunamadı (GRUB kurulu değil?)"
 
 STAMP=$(date +%Y%m%d-%H%M%S)
-BACKUP_DIR="/var/backups/technight-grub/$STAMP"
+BACKUP_DIR="/var/backups/kut-grub/$STAMP"
 mkdir -p "$BACKUP_DIR"
 chmod 0700 "$BACKUP_DIR"
 
@@ -67,14 +67,14 @@ done
 info "Tema dosyaları kopyalanıyor: $THEME_DIR"
 rm -rf "$THEME_DIR"
 install -d -m 0755 "$THEME_DIR"
-cp -a "$SCRIPT_DIR/technight/." "$THEME_DIR/"
+cp -a "$SCRIPT_DIR/kut/." "$THEME_DIR/"
 chmod -R a+rX "$THEME_DIR"
 
 info "Tema bilgi üreticisi ve GRUB kancaları kuruluyor"
 install -d -m 0755 /usr/local/sbin
 install -m 0755 "$SCRIPT_DIR/tools/render_theme.sh" "$RENDERER"
-install -m 0755 "$SCRIPT_DIR/tools/grub.d/05_technight_telemetry" "$HOOK_TELEMETRY"
-install -m 0755 "$SCRIPT_DIR/tools/grub.d/06_technight_info" "$HOOK_INFO"
+install -m 0755 "$SCRIPT_DIR/tools/grub.d/05_kut_telemetry" "$HOOK_TELEMETRY"
+install -m 0755 "$SCRIPT_DIR/tools/grub.d/06_kut_info" "$HOOK_INFO"
 
 # ---------------------------------------------------------------------------
 # /etc/default/grub
@@ -112,22 +112,22 @@ case "$current_timeout" in
 esac
 set_grub_var GRUB_TIMEOUT_STYLE "menu"
 
-add_grub_var_if_missing TECHNIGHT_TELEMETRY "1"
-add_grub_var_if_missing TECHNIGHT_TELEMETRY_DELAY "3"
+add_grub_var_if_missing KUT_TELEMETRY "1"
+add_grub_var_if_missing KUT_TELEMETRY_DELAY "3"
 
 # ---------------------------------------------------------------------------
 # Render the information labels from the installed machine, then regenerate
-# grub.cfg. 06_technight_info repeats the render on every future update-grub.
+# grub.cfg. 06_kut_info repeats the render on every future update-grub.
 # ---------------------------------------------------------------------------
 info "Sistem bilgileri tema etiketlerine yazılıyor"
 "$RENDERER" "$THEME_DIR/theme.txt.in" "$THEME_DIR/theme.txt"
 
-if grep -qE 'text[[:space:]]*=.*@TECHNIGHT_' "$THEME_DIR/theme.txt"; then
-    warn "theme.txt içinde çözümlenmemiş @TECHNIGHT_*@ değişkenleri var."
+if grep -qE 'text[[:space:]]*=.*@KUT_' "$THEME_DIR/theme.txt"; then
+    warn "theme.txt içinde çözümlenmemiş @KUT_*@ değişkenleri var."
 fi
 
-if [[ ${TECHNIGHT_SKIP_UPDATE:-0} == 1 ]]; then
-    warn "TECHNIGHT_SKIP_UPDATE=1: update-grub atlandı."
+if [[ ${KUT_SKIP_UPDATE:-0} == 1 ]]; then
+    warn "KUT_SKIP_UPDATE=1: update-grub atlandı."
 else
     info "GRUB yapılandırması yenileniyor"
     if command -v update-grub >/dev/null 2>&1; then
@@ -140,20 +140,20 @@ else
 
     if [[ -r $GRUB_CFG ]]; then
         grep -q 'set theme=' "$GRUB_CFG" || warn "grub.cfg içinde tema ayarı görünmüyor."
-        grep -q 'TechNight pre-menu telemetry' "$GRUB_CFG" ||
+        grep -q 'Kut pre-menu telemetry' "$GRUB_CFG" ||
             warn "grub.cfg içinde açılış öncesi telemetri ekranı görünmüyor."
     fi
 fi
 
 cat <<EOF
 
-  TechNight kuruldu.
+  Kut kuruldu.
 
   Tema       : $THEME_DIR/theme.txt
   Yedek      : $BACKUP_DIR
-  Telemetri  : TECHNIGHT_TELEMETRY=1, TECHNIGHT_TELEMETRY_DELAY=3
+  Telemetri  : KUT_TELEMETRY=1, KUT_TELEMETRY_DELAY=3
   Kaldırma   : sudo $SCRIPT_DIR/uninstall.sh
 
   Bir sonraki açılışta yeni tema, gerçek sistem bilgileri ve
-  J.A.R.V.I.S. açılış telemetrisi görünecek.
+  Kut açılış telemetrisi görünecek.
 EOF

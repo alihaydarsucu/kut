@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate the raster assets for the TechNight / J.A.R.V.I.S. GRUB theme.
+Generate the raster assets for the Kut GRUB theme.
 
 Everything is drawn at 2x and downsampled with Lanczos, which keeps the HUD
 lines crisp while staying compatible with GRUB's plain PNG loader (no SVG,
@@ -27,7 +27,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
-THEME = ROOT / "technight"
+THEME = ROOT / "kut"
 ICONS = THEME / "icons"
 FONTS = ROOT / "assets" / "fonts"
 LOGOS = ROOT / "assets" / "logos"
@@ -317,17 +317,17 @@ def build_background() -> Image.Image:
     bracket(1828 * S, 810 * S, 300 * S, 150 * S, flip_x=True, flip_y=True)
 
     # Top branding (no runtime status claims).
-    text(sd, (92 * S, 58 * S), "TECHNIGHT // HUD 04.2", f_tiny, (64, 157, 190, 125))
-    text(sd, (1828 * S, 58 * S), "J.A.R.V.I.S. // UI CORE", f_tiny, (64, 157, 190, 125), anchor="ra")
-    text(sd, (92 * S, 74 * S), "STARK-CLASS INTERFACE", f_tiny, (42, 104, 130, 85))
-    text(sd, (1828 * S, 74 * S), "TECHNIGHT BOOT SYSTEM", f_tiny, (42, 104, 130, 85), anchor="ra")
+    text(sd, (92 * S, 58 * S), "KUT // HUD 04.2", f_tiny, (64, 157, 190, 125))
+    text(sd, (1828 * S, 58 * S), "KUT // UI CORE", f_tiny, (64, 157, 190, 125), anchor="ra")
+    text(sd, (92 * S, 74 * S), "TURKIC-INSPIRED INTERFACE", f_tiny, (42, 104, 130, 85))
+    text(sd, (1828 * S, 74 * S), "KUT BOOT SYSTEM", f_tiny, (42, 104, 130, 85), anchor="ra")
 
     # Bottom strip.
     sd.line((120 * S, 1005 * S, 1800 * S, 1005 * S), fill=(29, 98, 126, 90), width=1 * S)
     for i in range(32):
         x = 130 + i * 53
         sd.line((x * S, 1001 * S, (x + 22) * S, 1001 * S), fill=(43, 132, 166, 80), width=1 * S)
-    text(sd, (cx, 1025 * S), "TECHNIGHT  //  J.A.R.V.I.S. BOOT INTERFACE",
+    text(sd, (cx, 1025 * S), "KUT  //  BOOT INTERFACE",
          f_tiny, (48, 125, 153, 110), anchor="ma")
 
     # Screen corner brackets.

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Remove the TechNight GRUB theme and its hooks, then rebuild grub.cfg.
+# Remove the Kut GRUB theme and its hooks, then rebuild grub.cfg.
 #
 #   sudo ./uninstall.sh
 set -euo pipefail
 
-THEME_DIR="/boot/grub/themes/technight"
-RENDERER="/usr/local/sbin/technight-render-theme"
-HOOK_TELEMETRY="/etc/grub.d/05_technight_telemetry"
-HOOK_INFO="/etc/grub.d/06_technight_info"
+THEME_DIR="/boot/grub/themes/kut"
+RENDERER="/usr/local/sbin/kut-render-theme"
+HOOK_TELEMETRY="/etc/grub.d/05_kut_telemetry"
+HOOK_INFO="/etc/grub.d/06_kut_info"
 DEFAULT_GRUB="/etc/default/grub"
 GRUB_CFG="${GRUB_CFG:-/boot/grub/grub.cfg}"
 
@@ -31,7 +31,7 @@ fi
 [[ -f $DEFAULT_GRUB ]] || die "$DEFAULT_GRUB bulunamadı."
 
 STAMP=$(date +%Y%m%d-%H%M%S)
-BACKUP_DIR="/var/backups/technight-grub/$STAMP"
+BACKUP_DIR="/var/backups/kut-grub/$STAMP"
 mkdir -p "$BACKUP_DIR"
 chmod 0700 "$BACKUP_DIR"
 info "Kaldırma öncesi yedek: $BACKUP_DIR"
@@ -40,7 +40,7 @@ if [[ -d $THEME_DIR ]]; then
     cp -a "$THEME_DIR" "$BACKUP_DIR/theme"
 fi
 
-info "TechNight GRUB kancaları kaldırılıyor"
+info "Kut GRUB kancaları kaldırılıyor"
 rm -f "$HOOK_TELEMETRY" "$HOOK_INFO" "$RENDERER"
 
 if [[ -d $THEME_DIR ]]; then
@@ -49,18 +49,18 @@ if [[ -d $THEME_DIR ]]; then
         info "Tema dizini kaldırılıyor: $THEME_DIR"
         rm -rf "$THEME_DIR"
     else
-        warn "$THEME_DIR TechNight dizinine benzemiyor; dokunulmadı."
+        warn "$THEME_DIR Kut dizinine benzemiyor; dokunulmadı."
     fi
 fi
 
 info "/etc/default/grub temizleniyor"
 # Remove only a GRUB_THEME assignment that points at this theme.
-sed -i '\|^[[:space:]]*GRUB_THEME=.*/themes/technight/theme\.txt|d' "$DEFAULT_GRUB"
-sed -i '/^[[:space:]]*TECHNIGHT_TELEMETRY[[:space:]]*=/d' "$DEFAULT_GRUB"
-sed -i '/^[[:space:]]*TECHNIGHT_TELEMETRY_DELAY[[:space:]]*=/d' "$DEFAULT_GRUB"
+sed -i '\|^[[:space:]]*GRUB_THEME=.*/themes/kut/theme\.txt|d' "$DEFAULT_GRUB"
+sed -i '/^[[:space:]]*KUT_TELEMETRY[[:space:]]*=/d' "$DEFAULT_GRUB"
+sed -i '/^[[:space:]]*KUT_TELEMETRY_DELAY[[:space:]]*=/d' "$DEFAULT_GRUB"
 
-if [[ ${TECHNIGHT_SKIP_UPDATE:-0} == 1 ]]; then
-    warn "TECHNIGHT_SKIP_UPDATE=1: update-grub atlandı."
+if [[ ${KUT_SKIP_UPDATE:-0} == 1 ]]; then
+    warn "KUT_SKIP_UPDATE=1: update-grub atlandı."
 else
     info "GRUB yapılandırması yenileniyor"
     if command -v update-grub >/dev/null 2>&1; then
@@ -74,10 +74,10 @@ fi
 
 cat <<EOF
 
-  TechNight kaldırıldı.
+  Kut kaldırıldı.
 
   Yedek: $BACKUP_DIR
-  GRUB_THEME ve TechNight telemetri ayarları kaldırıldı.
+  GRUB_THEME ve Kut telemetri ayarları kaldırıldı.
   GRUB_GFXMODE ve GRUB_TIMEOUT_STYLE korundu. Tamamen eski hale
   dönmek için yedekteki grub.default ile karşılaştırabilirsiniz.
 EOF

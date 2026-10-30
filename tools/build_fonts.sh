@@ -3,7 +3,7 @@
 # Convert the source TTFs into GRUB PF2 fonts.
 # GRUB automatically loads every *.pf2 file that sits next to theme.txt
 # (see /etc/grub.d/00_header), so the generated files are copied straight
-# into technight/.
+# into kut/.
 #
 # Usage: ./tools/build_fonts.sh
 
@@ -11,7 +11,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC="$ROOT/assets/fonts"
-OUT="$ROOT/technight"
+OUT="$ROOT/kut"
 
 command -v grub-mkfont >/dev/null || {
     echo "grub-mkfont is missing (install grub-common / grub2-tools)" >&2

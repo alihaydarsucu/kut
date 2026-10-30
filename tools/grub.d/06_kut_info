@@ -1,12 +1,12 @@
 #!/bin/sh
-# Refresh technight/theme.txt with current machine information.
+# Refresh kut/theme.txt with current machine information.
 #
-# Installed as /etc/grub.d/06_technight_info.  update-grub runs this hook
+# Installed as /etc/grub.d/06_kut_info.  update-grub runs this hook
 # before the menu entries are generated, so kernel/distro/RAM/CPU labels stay
 # accurate after upgrades without touching the artwork.
 set -e
 
-theme=${GRUB_THEME:-/boot/grub/themes/technight/theme.txt}
+theme=${GRUB_THEME:-/boot/grub/themes/kut/theme.txt}
 themedir=$(dirname "$theme")
 template="$themedir/theme.txt.in"
 
@@ -16,7 +16,7 @@ fi
 
 renderer=
 for candidate in \
-    /usr/local/sbin/technight-render-theme \
+    /usr/local/sbin/kut-render-theme \
     "$themedir/render_theme.sh"; do
     if [ -x "$candidate" ]; then
         renderer=$candidate
@@ -25,12 +25,12 @@ for candidate in \
 done
 
 if [ -z "$renderer" ]; then
-    printf 'TechNight: theme renderer not found; keeping %s\n' "$theme" >&2
+    printf 'Kut: theme renderer not found; keeping %s\n' "$theme" >&2
     exit 0
 fi
 
 if ! "$renderer" "$template" "$theme" >&2; then
-    printf 'TechNight: could not refresh %s; keeping the previous file\n' "$theme" >&2
+    printf 'Kut: could not refresh %s; keeping the previous file\n' "$theme" >&2
 fi
 
 exit 0

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Render technight/theme.txt.in into a GRUB theme with real machine values.
+# Render kut/theme.txt.in into a GRUB theme with real machine values.
 #
 # Usage: tools/render_theme.sh [--generic] TEMPLATE OUTPUT
 #
-# install.sh and /etc/grub.d/06_technight_info call this on every update-grub
+# install.sh and /etc/grub.d/06_kut_info call this on every update-grub
 # so the information labels never go stale. --generic writes portable
 # placeholders and is useful for tests or for building on another machine.
 set -euo pipefail
@@ -49,8 +49,8 @@ distro="GNU/LINUX"
 kernel="LINUX"
 memory="SYSTEM"
 firmware="UEFI"
-hostname_value="TECHNIGHT"
-cpu="J.A.R.V.I.S. CORE"
+hostname_value="KUT"
+cpu="KUT CORE"
 
 if [[ $generic -eq 0 ]]; then
     if [[ -r /etc/os-release ]]; then
@@ -78,7 +78,7 @@ if [[ $generic -eq 0 ]]; then
         firmware="BIOS"
     fi
 
-    hostname_value=$(hostname 2>/dev/null || cat /proc/sys/kernel/hostname 2>/dev/null || printf 'TECHNIGHT')
+    hostname_value=$(hostname 2>/dev/null || cat /proc/sys/kernel/hostname 2>/dev/null || printf 'KUT')
 
     if [[ -r /proc/cpuinfo ]]; then
         cpu=$(awk -F': ' '/model name|Hardware|Processor/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' /proc/cpuinfo)
@@ -101,12 +101,12 @@ tmp=$(mktemp "${output}.XXXXXX")
 trap 'rm -f "$tmp"' EXIT
 
 sed \
-    -e "s|@TECHNIGHT_DISTRO@|$(sed_escape "$distro")|g" \
-    -e "s|@TECHNIGHT_KERNEL@|$(sed_escape "$kernel")|g" \
-    -e "s|@TECHNIGHT_MEMORY@|$(sed_escape "$memory")|g" \
-    -e "s|@TECHNIGHT_FIRMWARE@|$(sed_escape "$firmware")|g" \
-    -e "s|@TECHNIGHT_HOST@|$(sed_escape "$hostname_value")|g" \
-    -e "s|@TECHNIGHT_CPU@|$(sed_escape "$cpu")|g" \
+    -e "s|@KUT_DISTRO@|$(sed_escape "$distro")|g" \
+    -e "s|@KUT_KERNEL@|$(sed_escape "$kernel")|g" \
+    -e "s|@KUT_MEMORY@|$(sed_escape "$memory")|g" \
+    -e "s|@KUT_FIRMWARE@|$(sed_escape "$firmware")|g" \
+    -e "s|@KUT_HOST@|$(sed_escape "$hostname_value")|g" \
+    -e "s|@KUT_CPU@|$(sed_escape "$cpu")|g" \
     "$template" >"$tmp"
 
 chmod 0644 "$tmp"
