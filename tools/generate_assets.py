@@ -31,6 +31,7 @@ THEME = ROOT / "kut"
 ICONS = THEME / "icons"
 FONTS = ROOT / "assets" / "fonts"
 LOGOS = ROOT / "assets" / "logos"
+BRAND_MARK = ROOT / "docs" / "assets" / "kut-mark.svg"
 
 W, H = 1920, 1080
 S = 2  # supersampling factor
@@ -538,6 +539,15 @@ def render_svg(svg: Path, out: Path, width=512):
     )
 
 
+def make_kut_logo(tmp: Path):
+    rendered = tmp / "kut-mark.png"
+    render_svg(BRAND_MARK, rendered, width=96)
+    mark = Image.open(rendered).convert("RGBA")
+    canvas = Image.new("RGBA", (96, 96), (11, 15, 20, 255))
+    canvas.alpha_composite(mark)
+    canvas.save(THEME / "kut-logo.png", optimize=True)
+
+
 def icon_canvas(im: Image.Image, size=96, pad=7, glow=True) -> Image.Image:
     im = im.convert("RGBA")
     im.thumbnail((size - 2 * pad, size - 2 * pad), Image.LANCZOS)
@@ -728,6 +738,7 @@ def main():
 
     print("icons ...")
     with tempfile.TemporaryDirectory() as td:
+        make_kut_logo(Path(td))
         make_logo_icons(Path(td))
     make_simple_icons()
 
