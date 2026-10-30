@@ -56,6 +56,7 @@ fi
 info "Cleaning /etc/default/grub"
 # Remove only a GRUB_THEME assignment that points at this theme.
 sed -i '\|^[[:space:]]*GRUB_THEME=.*/themes/kut/theme\.txt|d' "$DEFAULT_GRUB"
+sed -i '\|^[[:space:]]*GRUB_BACKGROUND=.*/themes/kut/background\.png|d' "$DEFAULT_GRUB"
 sed -i '/^[[:space:]]*KUT_TELEMETRY[[:space:]]*=/d' "$DEFAULT_GRUB"
 sed -i '/^[[:space:]]*KUT_TELEMETRY_DELAY[[:space:]]*=/d' "$DEFAULT_GRUB"
 

@@ -21,7 +21,12 @@ The installer:
 2. Installs the theme in <code>/boot/grub/themes/kut</code>.
 3. Renders distribution, kernel, RAM, firmware, host, and CPU values into the
    theme labels.
-4. Updates <code>GRUB_THEME</code>, <code>GRUB_GFXMODE</code>, and Kut settings.
+4. Updates <code>GRUB_THEME</code>, <code>GRUB_BACKGROUND</code>,
+   <code>GRUB_GFXMODE</code>, and Kut settings. The explicit Kut background
+   prevents the distribution's default GRUB background from overriding the
+   theme's visual appearance. Classless entries in <code>40_custom</code> are
+   also assigned matching OS icon classes, with a generic fallback icon for
+   unknown entries.
 5. Rebuilds <code>grub.cfg</code> with <code>update-grub</code> or, when
    appropriate, <code>grub-mkconfig</code>.
 
