@@ -1,0 +1,52 @@
+title-text: ""
+desktop-color: "#0a0e1a"
+desktop-image: "background.png"
+
++ boot_menu {
+  left = 20%
+  top = 32%
+  width = 60%
+  height = 36%
+  item_font = "DejaVu Sans Regular 14"
+  item_color = "#4a7aaa"
+  selected_item_color = "#e0f0ff"
+  item_height = 36
+  item_padding = 16
+  item_spacing = 4
+  selected_item_pixmap_style = "select_*.png"
+  scrollbar = false
+  menu_pixmap_style = "menu_*.png"
+}
+
++ label {
+  top = 18%
+  left = 20%
+  width = 60%
+  align = "center"
+  id = "__title__"
+  text = "BOOT MANAGER"
+  color = "#4a9eff"
+  font = "DejaVu Sans Bold 20"
+}
+
++ label {
+  top = 71%
+  left = 20%
+  width = 60%
+  align = "center"
+  id = "__timeout__"
+  text = "Otomatik başlatılıyor: %d"
+  color = "#2a4a6a"
+  font = "DejaVu Sans Regular 11"
+}
+
++ progress_bar {
+  id = "__timeout_indicator__"
+  left = 30%
+  top = 75%
+  width = 40%
+  height = 3
+  fg_color = "#4a9eff"
+  bg_color = "#0f1f3a"
+  border_color = "#1a3a5a"
+}
