@@ -1,0 +1,116 @@
+#!/bin/sh
+# TechNight pre-menu telemetry screen.
+#
+# This is installed as /etc/grub.d/05_technight_telemetry and runs while
+# grub-mkconfig builds grub.cfg.  It emits GRUB script commands, so the real
+# SMBIOS identity and current date are shown once before the boot menu.
+set -e
+
+. "$pkgdatadir/grub-mkconfig_lib"
+
+# grub-mkconfig does not export arbitrary /etc/default/grub variables to the
+# hooks, so read the two TechNight switches directly instead of relying on the
+# environment.
+read_setting() {
+    key=$1
+    [ -r /etc/default/grub ] || return 0
+    sed -n "s/^[[:space:]]*${key}[[:space:]]*=[[:space:]]*//p" /etc/default/grub |
+        tail -n 1 |
+        sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//"
+}
+
+telemetry=$(read_setting TECHNIGHT_TELEMETRY)
+[ -n "$telemetry" ] || telemetry=1
+case "$telemetry" in
+    0 | no | false | off | disabled) exit 0 ;;
+esac
+
+delay=$(read_setting TECHNIGHT_TELEMETRY_DELAY)
+case "$delay" in
+    '' | *[!0-9]*) delay=3 ;;
+esac
+[ "$delay" -gt 10 ] && delay=10
+[ "$delay" -lt 1 ] && exit 0
+
+theme=${GRUB_THEME:-/boot/grub/themes/technight/theme.txt}
+themedir=$(dirname "$theme")
+background=
+
+if [ -r "$themedir/background.png" ]; then
+    theme_rel=$(make_system_path_relative_to_its_root "$themedir")
+    [ -n "$theme_rel" ] || theme_rel=/boot/grub/themes/technight
+    # Refuse a single quote rather than emitting broken GRUB quoting.
+    case "$theme_rel" in
+        *"'"*) theme_rel=/boot/grub/themes/technight ;;
+    esac
+    background="(\$root)$theme_rel/background.png"
+fi
+
+cat << EOF
+# --- TechNight pre-menu telemetry -----------------------------------------
+insmod smbios
+insmod date
+insmod sleep
+insmod png
+insmod gfxterm_background
+
+set technight_bios_vendor=UNKNOWN
+set technight_bios_version=UNKNOWN
+set technight_bios_date=UNKNOWN
+set technight_sys_vendor=UNKNOWN
+set technight_sys_product=UNKNOWN
+set technight_board_vendor=UNKNOWN
+set technight_board_product=UNKNOWN
+set technight_cpu_vendor=UNKNOWN
+set technight_cpu_version=UNKNOWN
+
+smbios -t 0 -s 4 --set technight_bios_vendor
+smbios -t 0 -s 5 --set technight_bios_version
+smbios -t 0 -s 8 --set technight_bios_date
+smbios -t 1 -s 4 --set technight_sys_vendor
+smbios -t 1 -s 5 --set technight_sys_product
+smbios -t 2 -s 4 --set technight_board_vendor
+smbios -t 2 -s 5 --set technight_board_product
+smbios -t 4 -s 7 --set technight_cpu_vendor
+smbios -t 4 -s 16 --set technight_cpu_version
+
+if [ "\$grub_platform" = "efi" ]; then
+  set technight_boot_mode=UEFI
+else
+  set technight_boot_mode=BIOS
+fi
+set technight_arch=\$grub_cpu
+
+set gfxterm_font="Share Tech Mono Regular 16"
+terminal_output gfxterm
+set color_normal=light-cyan/black
+set color_highlight=black/light-cyan
+EOF
+
+if [ -n "$background" ]; then
+    cat << EOF
+background_image -m normal "$background"
+EOF
+fi
+
+cat << EOF
+clear
+echo "  +------------------------------------------------------------+"
+echo "  |  TECH NIGHT  //  J.A.R.V.I.S. PRE-BOOT TELEMETRY           |"
+echo "  +------------------------------------------------------------+"
+echo "  FIRMWARE   : \$technight_bios_vendor \$technight_bios_version"
+echo "  BIOS DATE  : \$technight_bios_date"
+echo "  SYSTEM     : \$technight_sys_vendor \$technight_sys_product"
+echo "  BOARD      : \$technight_board_vendor \$technight_board_product"
+echo "  PROCESSOR  : \$technight_cpu_vendor \$technight_cpu_version"
+echo "  PLATFORM   : \$technight_boot_mode / \$technight_arch"
+echo "  LOCAL TIME :"
+date
+echo ""
+echo "  Booting menu in $delay seconds   [ESC] skip"
+sleep --interruptible $delay
+set color_normal=white/black
+set color_highlight=black/light-gray
+clear
+# --- end TechNight pre-menu telemetry -------------------------------------
+EOF
