@@ -84,25 +84,26 @@ install -m 0755 "$SCRIPT_DIR/tools/grub.d/06_kut_info" "$HOOK_INFO"
 if [[ -f $CUSTOM_GRUB ]]; then
     tmp_custom=$(mktemp)
     awk '
-        /^[[:space:]]*menuentry[[:space:]]/ && $0 !~ /--class/ {
+        /^[[:space:]]*(menuentry|submenu)[[:space:]]/ {
             title = tolower($0)
-            classes = "os"
-            if (title ~ /windows/) classes = "windows os"
-            else if (title ~ /pardus/) classes = "pardus gnu-linux gnu os"
-            else if (title ~ /ubuntu/) classes = "ubuntu gnu-linux gnu os"
-            else if (title ~ /debian/) classes = "debian gnu-linux gnu os"
-            else if (title ~ /fedora/) classes = "fedora gnu-linux gnu os"
-            else if (title ~ /arch/) classes = "archlinux gnu-linux gnu os"
-            else if (title ~ /kali/) classes = "kali gnu-linux gnu os"
-            else if (title ~ /mint/) classes = "linuxmint gnu-linux gnu os"
-            else if (title ~ /manjaro/) classes = "manjaro gnu-linux gnu os"
-            else if (title ~ /opensuse|open suse|suse/) classes = "opensuse gnu-linux gnu os"
-            else if (title ~ /zorin/) classes = "zorin gnu-linux gnu os"
-            else if (title ~ /freebsd/) classes = "freebsd bsd os"
-            else if (title ~ /macos|mac os|os x|osx/) classes = "macos apple os"
-            else if (title ~ /android/) classes = "android os"
-            else if (title ~ /efi.*setting|uefi/) classes = "efi"
-            sub(/[[:space:]]*\{[[:space:]]*$/, " --class " classes " {")
+            classes = "--class os"
+            if (title ~ /windows/) classes = "--class windows --class os"
+            else if (title ~ /pardus/) classes = "--class pardus --class gnu-linux --class gnu --class os"
+            else if (title ~ /ubuntu/) classes = "--class ubuntu --class gnu-linux --class gnu --class os"
+            else if (title ~ /debian/) classes = "--class debian --class gnu-linux --class gnu --class os"
+            else if (title ~ /fedora/) classes = "--class fedora --class gnu-linux --class gnu --class os"
+            else if (title ~ /arch/) classes = "--class archlinux --class gnu-linux --class gnu --class os"
+            else if (title ~ /kali/) classes = "--class kali --class gnu-linux --class gnu --class os"
+            else if (title ~ /mint/) classes = "--class linuxmint --class gnu-linux --class gnu --class os"
+            else if (title ~ /manjaro/) classes = "--class manjaro --class gnu-linux --class gnu --class os"
+            else if (title ~ /opensuse|open suse|suse/) classes = "--class opensuse --class gnu-linux --class gnu --class os"
+            else if (title ~ /zorin/) classes = "--class zorin --class gnu-linux --class gnu --class os"
+            else if (title ~ /freebsd/) classes = "--class freebsd --class bsd --class os"
+            else if (title ~ /macos|mac os|os x|osx/) classes = "--class macos --class apple --class os"
+            else if (title ~ /android/) classes = "--class android --class os"
+            else if (title ~ /efi.*setting|uefi/) classes = "--class efi"
+            sub(/[[:space:]]+--class.*\{[[:space:]]*$/, " {")
+            sub(/[[:space:]]*\{[[:space:]]*$/, " " classes " {")
         }
         { print }
     ' "$CUSTOM_GRUB" >"$tmp_custom"
@@ -138,7 +139,9 @@ add_grub_var_if_missing() {
 
 info "Updating GRUB settings"
 set_grub_var GRUB_THEME "$THEME_DIR/theme.txt"
-set_grub_var GRUB_BACKGROUND "$THEME_DIR/background.png"
+# Older Kut releases used a global background; the theme now owns its image.
+sed -i '\|^[[:space:]]*GRUB_BACKGROUND=.*/themes/kut/background\.png|d' "$DEFAULT_GRUB"
+set_grub_var GRUB_GFXPAYLOAD_LINUX "text"
 set_grub_var GRUB_GFXMODE "1920x1080,1600x900,1366x768,1280x720,1024x768,auto"
 
 current_timeout=$(read_grub_var GRUB_TIMEOUT)

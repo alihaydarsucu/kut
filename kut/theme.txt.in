@@ -6,11 +6,8 @@
 
 title-text: ""
 
-desktop-image: "background.png"
 desktop-color: "#030711"
-desktop-image-scale-method: "crop"
-desktop-image-h-align: "center"
-desktop-image-v-align: "center"
+desktop-image: "background.png"
 
 terminal-font: "Share Tech Mono Regular 16"
 

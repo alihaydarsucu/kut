@@ -32,20 +32,6 @@ esac
 [ "$delay" -gt 10 ] && delay=10
 [ "$delay" -lt 1 ] && exit 0
 
-theme=${GRUB_THEME:-/boot/grub/themes/kut/theme.txt}
-themedir=$(dirname "$theme")
-background=
-
-if [ -r "$themedir/background.png" ]; then
-    theme_rel=$(make_system_path_relative_to_its_root "$themedir")
-    [ -n "$theme_rel" ] || theme_rel=/boot/grub/themes/kut
-    # Refuse a single quote rather than emitting broken GRUB quoting.
-    case "$theme_rel" in
-        *"'"*) theme_rel=/boot/grub/themes/kut ;;
-    esac
-    background="(\$root)$theme_rel/background.png"
-fi
-
 cat << EOF
 # --- Kut pre-menu telemetry -----------------------------------------------
 insmod smbios
@@ -87,27 +73,39 @@ set color_normal=light-cyan/black
 set color_highlight=black/light-cyan
 EOF
 
-if [ -n "$background" ]; then
-    cat << EOF
-background_image -m normal "$background"
-EOF
-fi
-
 cat << EOF
 clear
-echo "  +------------------------------------------------------------+"
-echo "  |  KUT  //  PRE-BOOT TELEMETRY                                |"
-echo "  +------------------------------------------------------------+"
-echo "  FIRMWARE   : \$kut_bios_vendor \$kut_bios_version"
-echo "  BIOS DATE  : \$kut_bios_date"
-echo "  SYSTEM     : \$kut_sys_vendor \$kut_sys_product"
-echo "  BOARD      : \$kut_board_vendor \$kut_board_product"
-echo "  PROCESSOR  : \$kut_cpu_vendor \$kut_cpu_version"
-echo "  PLATFORM   : \$kut_boot_mode / \$kut_arch"
-echo "  LOCAL TIME :"
-date
 echo ""
-echo "  Booting menu in $delay seconds   [ESC] skip"
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo "                                                                      KUT // SYSTEM STARTUP"
+sleep --interruptible 1
+echo "                                                                      [1/4] FIRMWARE  \$kut_bios_vendor \$kut_bios_version"
+sleep --interruptible 1
+echo "                                                                      [2/4] SYSTEM    \$kut_sys_vendor \$kut_sys_product"
+sleep --interruptible 1
+echo "                                                                      [3/4] PROCESSOR \$kut_cpu_vendor \$kut_cpu_version"
+sleep --interruptible 1
+echo "                                                                      [4/4] PLATFORM  \$kut_boot_mode / \$kut_arch"
+echo ""
+echo "                                                                      STARTING BOOT TARGET"
 sleep --interruptible $delay
 set color_normal=white/black
 set color_highlight=black/light-gray
